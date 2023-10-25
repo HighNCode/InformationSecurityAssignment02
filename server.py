@@ -2,9 +2,6 @@ import ssl
 import socket
 from cryptography.fernet import Fernet
 import hashlib
-from cryptography.hazmat.primitives.asymmetric import dh,rsa,padding
-from cryptography.hazmat.primitives import serialization,hashes
-from cryptography.hazmat.backends import default_backend
 
 # Server configuration
 HOST = 'localhost'

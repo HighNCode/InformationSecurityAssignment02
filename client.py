@@ -11,6 +11,25 @@ HOST = 'localhost'
 PORT = 1234
 CERT_FILE = 'certificate.pem'
 
+# Generating an AES key
+key = Fernet.generate_key()
+
+# Creating a Cipher Object
+cipher = Fernet(key)
+
+# Defining a message to be encrypted and decrypted
+msg = b"This is a demo sentence for AES"
+
+#AES ENCRYPTION
+# Encrypting the above defined message
+encryptedmsg = cipher.encrypt(msg)
+
+#AES DECRYPTION
+# Decrypting the above encrypted message
+decryptedmsg = cipher.decrypt(encryptedmsg)
+
+print(decryptedmsg)
+
 # Create a socket object
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
