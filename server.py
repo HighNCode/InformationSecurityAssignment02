@@ -27,9 +27,12 @@ while True:
 
         # Send the received data back to the client
         client_socket.send(data)
+        if data == "exit":
+            break
 
     # Close the client socket
     client_socket.close()
 
-# Close the server socket
-server_socket.close()
+    # Close the server socket
+    server_socket.close()
+    break
