@@ -72,11 +72,11 @@ def clientFun(message):
         client_socket.connect((server_address, server_port))
 
         #encrypting the message received from the Flask App using AES
-        key,encryptedmsg = AES(message)
+        key,encryptedmsg = AES(message.encode('utf-8'))
         client_socket.send(encryptedmsg.encode('utf-8'))
         
         #generating hash using SHA256 
-        hashvalue = SHA256(message)
+        hashvalue = SHA256(message.encode('utf-8'))
         client_socket.send(hashvalue.encode('utf-8'))       
         
         DiffieHellman(client_socket)
