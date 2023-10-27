@@ -7,13 +7,14 @@ from flask import render_template
 import random
 from sympy import isprime, primitive_root
 
-    
+
 def AES(message):
+
     # Generating an AES key
     key = Fernet.generate_key()
     # Creating a Cipher Object
     cipher = Fernet(key)
-
+    
     #AES ENCRYPTION
     # Encrypting the received message
     encryptedmsg = cipher.encrypt(message)
@@ -92,5 +93,3 @@ def clientFun(message):
         client_socket.close()
 
     return render_template('index.html', message=message, response=response.decode('utf-8'))
-
-
