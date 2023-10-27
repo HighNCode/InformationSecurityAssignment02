@@ -1,4 +1,17 @@
 import socket
+import json
+import random
+
+def DiffieHellman(q,alpha,publickeyA):
+    
+    #Generating private keys for server, which is less than the prime no q and also different (as private keys for both can never be the same).
+    privatekeyB = random.randint(0, q-1)
+
+    #Generating public keys for server, using the private keys generated above.
+    publickeyB = (pow(alpha,privatekeyB) % q) #(alpha^privatekeyA)modq
+    sharedsecretB = (pow(publickeyA,privatekeyB) % q)
+    
+    return sharedsecretB
 
 # Create a socket object
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -19,15 +32,26 @@ while True:
     print(f"Received connection from {client_address}")
 
     while True:
+        
+        message =  client_socket.recv(1024)
+        hasvalue = client_socket.recv(1024)
+        
         # Receive data from the client
-        data = client_socket.recv(1024)
-        if not data:
+        json_data = client_socket.recv(1024).decode('utf-8')
+        if not json_data:
             break
-        print(f"Received: {data.decode('utf-8')}")
+        # Parse the JSON data
+        received_data = json.loads(json_data)
 
+        # Access the prime number and primitive root
+        prime_number = received_data['prime_number']
+        primitive_root = received_data['primitive_root']
+        publickeyA = received_data['publickeyA']
+        
+        publickeyB = DiffieHellman(prime_number,primitive_root,publickeyA)
         # Send the received data back to the client
-        client_socket.send(data)
-        if data == "exit":
+        client_socket.send(publickeyB)
+        if json_data == "exit":
             break
 
     # Close the client socket
