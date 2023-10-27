@@ -1,45 +1,67 @@
 import socket
-from cryptography.fernet import Fernet
-import hashlib
-from cryptography.hazmat.primitives.asymmetric import dh,rsa,padding
-from cryptography.hazmat.primitives import serialization,hashes
-from cryptography.hazmat.backends import default_backend
-import ssl
+from flask import render_template
 
-# Server configuration
-HOST = 'localhost'
-PORT = 1234
-CERT_FILE = 'certificate.pem'
+def clientFun(message):
+    # Define the server address and port
+    server_address = '127.0.0.1'
+    server_port = 12345
+        
+    # Create a socket object
+    client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-# Create a socket object
-server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    try:
+        # Connect to the server
+        client_socket.connect((server_address, server_port))
 
-# Wrap the socket with SSL/TLS
-context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
-context.load_cert_chain(certfile=CERT_FILE)
-server_socket_ssl = context.wrap_socket(server_socket, server_side=True)
+        # Send the message to the server
+        client_socket.send(message.encode('utf-8'))
 
-# Bind the SSL socket to a specific address and port
-server_socket_ssl.bind((HOST, PORT))
+        # Receive the response from the server
+        response = client_socket.recv(1024)
+    except ConnectionRefusedError:
+        response = b"Server is not available."
 
-# Listen for incoming connections
-server_socket_ssl.listen()
+    finally:
+        # Close the client socket
+        client_socket.close()
 
-# Accept a client connection
-client_socket_ssl, client_address = server_socket_ssl.accept()
+    return render_template('index.html', message=message, response=response.decode('utf-8'))
 
-# Receive data from the client
-data = client_socket_ssl.recv(1024)
 
-# Process the received data
-# ...
 
-# Send a response back to the client
-response = "Hello, client!"
-client_socket_ssl.send(response.encode())
 
-# Close the client socket
-client_socket_ssl.close()
 
-# Close the SSL server socket
-server_socket_ssl.close()
+
+
+
+
+
+
+
+
+
+
+# # Create a socket object
+# client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+# # Define the server address and port
+# server_address = '127.0.0.1'
+# server_port = 12345
+
+# # Connect to the server
+# client_socket.connect((server_address, server_port))
+
+# while True:
+#     message = input("Enter a message to send to the server (or 'exit' to quit): ")
+#     if message == 'exit':
+#         break
+
+#     # Send the message to the server
+#     client_socket.send(message.encode('utf-8'))
+
+#     # Receive the response from the server
+#     response = client_socket.recv(1024)
+#     print(f"Server response: {response.decode('utf-8')}")
+
+# # Close the client socket
+# client_socket.close()

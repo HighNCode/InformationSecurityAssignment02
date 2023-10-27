@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Client-Server Frontend</title>
+</head>
+<body>
+    <h1>Client-Server Frontend</h1>
+    <form method="POST" action="/send_message">
+        <label for="message">Enter a message:</label>
+        <input type="text" name="message" id="message" required>
+        <button type="submit">Send Message</button>
+    </form>
+    <p>Message: {{ message }}</p>
+    <p>Response: {{ response }}</p>
+</body>
+</html>
